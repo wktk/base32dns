@@ -16,8 +16,7 @@ class TestServer < Async::DNS::Server
     transaction.respond!(ns, resource_class: IN::NS)
     transaction.respond!(ip, resource_class: IN::A)
     transaction.respond!(*soa, resource_class: IN::SOA) if name == ns.to_s
-    puts transaction.name
-    puts Base32.decode(transaction.name.split('.')[0].upcase) rescue nil
+    puts name, Base32.decode(name.split('.')[0].upcase) rescue nil
   end
 end
 
