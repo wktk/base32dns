@@ -8,14 +8,15 @@ class TestServer < Async::DNS::Server
 
   def ns=(name)
     @ns = Resolv::DNS::Name.create(name)
-    @soa = [ns, ns, Time.now.to_i, 10000, 24000, 10800, 60]
+    @soa = [ns, Time.now.to_i, 10000, 24000, 10800, 60]
   end
   attr_reader :ns, :soa
 
   def process(name, resource_class, transaction)
     transaction.respond!(ns, resource_class: IN::NS)
     transaction.respond!(ip, resource_class: IN::A)
-    transaction.respond!(*soa, resource_class: IN::SOA) if name == ns.to_s
+    dns_name = Resolv::DNS::Name.create(name)
+    transaction.respond!(dns_name, *soa, resource_class: IN::SOA)
     logger.info('request', name)
     logger.info('decoded', Base32.decode(name.split('.')[0].upcase)) rescue nil
   end
