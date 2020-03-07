@@ -1,6 +1,5 @@
 require 'async/dns'
 require 'base32'
-require 'rubydns'
 
 class TestServer < Async::DNS::Server
   IN = Resolv::DNS::Resource::IN
