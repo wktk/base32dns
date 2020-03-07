@@ -13,6 +13,7 @@ class TestServer < Async::DNS::Server
   attr_reader :ns, :soa
 
   def process(name, resource_class, transaction)
+    logger.info('remote_address', transaction.options[:remote_address].inspect)
     transaction.respond!(ns, resource_class: IN::NS)
     transaction.respond!(ip, resource_class: IN::A)
     dns_name = Resolv::DNS::Name.create(name)
